@@ -1,0 +1,19 @@
+*{
+  user-select: none;
+}
+
+.Pointer{
+  cursor: pointer;
+}
+
+.aboutHeading{
+  margin-top: 10%;
+}
+
+
+@media screen and (max-width:500px) {
+  .aboutHeading{
+    margin-top: 25%;
+  }
+
+}
