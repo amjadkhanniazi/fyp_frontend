@@ -1,35 +1,6 @@
 import React from 'react'
 import Navbar from './Navbar'
 
-function postfuntion(){
-  var name = document.getElementById("registerName").value;
-  var cnic = document.getElementById("registercnic").value;
-  var email = document.getElementById("registerEmail").value;
-  var password = document.getElementById("registerPassword").value;
-  var data = {
-    name: name,
-    cnic: cnic,
-    email: email,
-    password: password
-  }
-  fetch("http://localhost:5000/api/users/register", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
-  .then((response) => response.json())
-  .then((data) => {
-    console.log("Success:", data);
-    alert("User Registered Successfully")
-  })
-  .catch((error) => {
-    console.error("Error:", error);
-    alert("User Registration Failed")
-  });
-}
-
 
 export default function SignInSignUpPage() {
   return (
@@ -174,7 +145,6 @@ export default function SignInSignUpPage() {
               I have read and agree to the terms
             </label>
           </div>
-
        
           <button type="submit" className="btn btn-primary btn-block mb-3" >Sign Up</button>
         </form>
