@@ -1,6 +1,36 @@
 import React from 'react'
 import Navbar from './Navbar'
 
+function postfuntion(){
+  var name = document.getElementById("registerName").value;
+  var cnic = document.getElementById("registercnic").value;
+  var email = document.getElementById("registerEmail").value;
+  var password = document.getElementById("registerPassword").value;
+  var data = {
+    name: name,
+    cnic: cnic,
+    email: email,
+    password: password
+  }
+  fetch("http://localhost:5000/api/users/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+  .then((response) => response.json())
+  .then((data) => {
+    console.log("Success:", data);
+    alert("User Registered Successfully")
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+    alert("User Registration Failed")
+  });
+}
+
+
 export default function SignInSignUpPage() {
   return (
     <>
@@ -92,29 +122,49 @@ export default function SignInSignUpPage() {
 
           <p className="text-center">or:</p>
 
-          <div className="form-outline mb-4">
+
+          <div>
+            <label className="form-label" for="registerName">Name </label>
+            <input className="form-control" type="text" id="registerName" placeholder="Name"/>
+          </div>
+
+          {/* <div className="form-outline mb-4">
             <input type="text" id="registerName" className="form-control" />
             <label className="form-label" for="registerName">Name</label>
+          </div> */}
+
+          <div>
+            <label className="form-label" for="registercnic">CNIC </label>
+            <input className="form-control" type="text" id="registercnic" placeholder="CNIC"/>
           </div>
 
 
-          <div className="form-outline mb-4">
+          {/* <div className="form-outline mb-4">
             <input type="text" id="registercnic" className="form-control" />
             <label className="form-label" for="registercnic">CNIC</label>
+          </div> */}
+
+
+          <div>
+            <label className="form-label" for="registerEmail">Email </label>
+            <input className="form-control" type="text" id="registerEmail" placeholder="Email"/>
           </div>
 
 
-        
-          <div className="form-outline mb-4">
+          {/* <div className="form-outline mb-4">
             <input type="email" id="registerEmail" className="form-control" />
             <label className="form-label" for="registerEmail">Email</label>
+          </div> */}
+
+          <div>
+            <label className="form-label" for="registerPassword">Password </label>
+            <input className="form-control" type="password" id="registerPassword" placeholder="Password"/>
           </div>
 
-     
-          <div className="form-outline mb-4">
+          {/* <div className="form-outline mb-4">
             <input type="password" id="registerPassword" className="form-control" />
             <label className="form-label" for="registerPassword">Password</label>
-          </div>
+          </div> */}
 
         
           <div className="form-check d-flex justify-content-center mb-4">
@@ -126,7 +176,7 @@ export default function SignInSignUpPage() {
           </div>
 
        
-          <button type="submit" className="btn btn-primary btn-block mb-3">Sign Up</button>
+          <button type="submit" className="btn btn-primary btn-block mb-3" >Sign Up</button>
         </form>
       </div>
     </div>
