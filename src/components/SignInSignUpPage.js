@@ -1,8 +1,40 @@
 import React from 'react'
 import Navbar from './Navbar'
+import axios from 'axios'
+import {useState} from 'react'
+import { useNavigate } from 'react-router-dom'
 
+const SignInSignUpPage = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    cnic: "",
+  });
 
-export default function SignInSignUpPage() {
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint to submit the data
+     await axios.post("https://localhost:7008/api/UserRegistries", formData);
+     alert("Success");
+
+      navigate('/');
+      // You can also show a success message or redirect the user after successful signup
+    } catch (error) {
+      console.error("Signup failed:", error);
+      // Handle the error, show an error message, or take any other necessary action
+    }
+  };
+
   return (
     <>
     <Navbar/>
@@ -75,7 +107,7 @@ export default function SignInSignUpPage() {
         </form>
       </div>
       <div className="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="tab-register">
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="text-center mb-3">
             <p>Sign up with:</p>
             <button type="button" className="btn btn-primary btn-floating mx-1">
@@ -95,8 +127,16 @@ export default function SignInSignUpPage() {
 
 
           <div>
-            <label className="form-label" for="registerName">Name </label>
-            <input className="form-control" type="text" id="registerName" placeholder="Name"/>
+            <label className="form-label" htmlFor="name">Name </label>
+            <input 
+            className="form-control" 
+            type="text" 
+            id="name"
+            name='name'
+            value={formData.name}
+            onChange={handleChange} 
+            placeholder="Name as per CNIC"
+            />
           </div>
 
           {/* <div className="form-outline mb-4">
@@ -105,8 +145,16 @@ export default function SignInSignUpPage() {
           </div> */}
 
           <div>
-            <label className="form-label" for="registercnic">CNIC </label>
-            <input className="form-control" type="text" id="registercnic" placeholder="CNIC"/>
+            <label className="form-label" htmlFor="cnic">CNIC </label>
+            <input
+            className="form-control" 
+            type="text" 
+            id="cnic"
+            name='cnic'
+            value={formData.cnic}
+            onChange={handleChange} 
+            placeholder="CNIC"
+            />
           </div>
 
 
@@ -117,8 +165,16 @@ export default function SignInSignUpPage() {
 
 
           <div>
-            <label className="form-label" for="registerEmail">Email </label>
-            <input className="form-control" type="text" id="registerEmail" placeholder="Email"/>
+            <label className="form-label" htmlFor="email">Email </label>
+            <input
+            className="form-control" 
+            type="email" 
+            id="email"
+            name='email'
+            value={formData.email}
+            onChange={handleChange} 
+            placeholder="Enter Email here"
+            />
           </div>
 
 
@@ -128,8 +184,16 @@ export default function SignInSignUpPage() {
           </div> */}
 
           <div>
-            <label className="form-label" for="registerPassword">Password </label>
-            <input className="form-control" type="password" id="registerPassword" placeholder="Password"/>
+            <label className="form-label" htmlFor="password">Password </label>
+            <input
+            className="form-control" 
+            type="password" 
+            id="password"
+            name='password'
+            value={formData.password}
+            onChange={handleChange} 
+            placeholder="Password"
+            />
           </div>
 
           {/* <div className="form-outline mb-4">
@@ -138,15 +202,15 @@ export default function SignInSignUpPage() {
           </div> */}
 
         
-          <div className="form-check d-flex justify-content-center mb-4">
+          {/* <div className="form-check d-flex justify-content-center mb-4">
             <input className="form-check-input me-2" type="checkbox" value="" id="registerCheck"
               aria-describedby="registerCheckHelpText" />
             <label className="form-check-label" for="registerCheck">
               I have read and agree to the terms
             </label>
-          </div>
+          </div> */}
        
-          <button type="submit" className="btn btn-primary btn-block mb-3" >Sign Up</button>
+          <button type="submit" className="btn btn-primary btn-block mb-3 mt-4" >Sign Up</button>
         </form>
       </div>
     </div>
@@ -158,3 +222,5 @@ export default function SignInSignUpPage() {
     </>
   )
 }
+export default SignInSignUpPage;
+
