@@ -1,10 +1,39 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { Link, useNavigate, } from 'react-router-dom';
 import { Grid } from '@mui/material';
+import axios from 'axios';
 
 export default function Home() {
+
+
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [message, setMessage] = useState('');
+
+  const handleNewsletterEmailChange = (e) => {
+    setNewsletterEmail(e.target.value);
+  };
+
+  
+
+
+    const handleSubmitNewsletter = async (e) => {
+      e.preventDefault();
+  
+      try {
+        await axios.post('https://localhost:7008/api/NewsLetters', {
+          email: newsletterEmail,
+        });
+
+        setNewsletterEmail('');
+        setMessage('Subscription successful! Thank you for subscribing.');
+      } catch (error) {
+        
+        setMessage('Failed to subscribe. Please try again later.');
+      }
+    };
+
 
   const navigate = useNavigate()
   return (
@@ -322,29 +351,41 @@ export default function Home() {
           {/* Home News letter section */}
 
           <section style={{ padding: '50px 0px' }}>
-            <div className="shadow-4-strong" style={{ height: "300px", width: "100%", backgroundColor: "#0C56D0", borderRadius: "40px" }}>
+            <div  style={{ height: "300px", width: "100%", backgroundColor: "#0C56D0", borderRadius: "40px" }}>
 
-              <form>
-                <h2 style={{ color: "white", textAlign: "center", lineHeight: "100px" }}>NewsLetter</h2>
+            <form onSubmit={handleSubmitNewsletter}>
+            <h2 style={{ color: 'white', textAlign: 'center', lineHeight: '100px' }}>NewsLetter</h2>
+            <div  style={{ width: '80%', maxWidth: '500px', border: '1px solid black', borderRadius: '4px', margin: 'auto', backgroundColor: 'white' }}>
+              
+            <label  htmlFor="form12">Email </label>
+              
+              <input
+                type="text"
+                id="form12"
+                style={{width: '80%',marginLeft:'10px'}}
+                value={newsletterEmail}
+                onChange={handleNewsletterEmailChange}
+              />
+              
+            </div>
+            <button
+              type="submit"
+              
+              style={{
+                width: '80%',
+                maxWidth: '300px',
+                margin: '3% 35%',
+                color: '#0C56D0',
+                backgroundColor: 'white',
+                fontWeight: 'bold',
+                fontSize: '15px',
+              }}
+            >
+              Subscribe
+            </button>
+          </form>
+          <p style={{ color: 'White', textAlign: 'center' }}>{message}</p>
 
-                <div className="form-outline form-control"
-                  style={{ width: "80%", maxWidth: '500px', border: "1px solid black", borderRadius: "4px", margin: "auto", backgroundColor: "white" }}>
-
-                  <input type="text" id="form12" className="form-control" />
-                  <label className="form-label" htmlFor="form12">Email</label>
-
-                </div>
-
-                <button type="submit" className="btn btn-primary btn-block mb-4" style={{
-                  width: "80%", maxWidth: '500px', margin: "3% auto",
-                  color: "#0C56D0", backgroundColor: "white", fontWeight: "bold", fontSize: "15px"
-                }}>
-
-                  Subscribe
-                </button>
-
-
-              </form>
             </div>
 
           </section>
