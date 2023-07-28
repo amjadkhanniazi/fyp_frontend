@@ -4,7 +4,7 @@ import Footer from './Footer';
 import { Link, useNavigate, } from 'react-router-dom';
 import { Grid } from '@mui/material';
 import axios from 'axios';
-
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export default function Home() {
 
 
@@ -15,25 +15,33 @@ export default function Home() {
     setNewsletterEmail(e.target.value);
   };
 
-  
-
 
     const handleSubmitNewsletter = async (e) => {
       e.preventDefault();
+    
+        if (!emailRegex.test(newsletterEmail)) {
+          setMessage('Please enter a valid email address.');
+          return;
+        }
+      
   
       try {
+        const response = await axios.post('https://localhost:7008/api/NewsLetters/check-email', { email: newsletterEmail });
+        if(response.data.exists){
+          setMessage('Email Already Exists.');
+        } else{
         await axios.post('https://localhost:7008/api/NewsLetters', {
           email: newsletterEmail,
         });
 
         setNewsletterEmail('');
         setMessage('Subscription successful! Thank you for subscribing.');
+      }
       } catch (error) {
         
         setMessage('Failed to subscribe. Please try again later.');
       }
     };
-
 
   const navigate = useNavigate()
   return (
