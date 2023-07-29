@@ -5,6 +5,45 @@ import {useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const SignInSignUpPage = () => {
+
+//User Login
+const [credentials, setCredentials] = useState({ cnic: '', password: '' });
+const [error, setError] = useState('');
+const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+const handleChangelogin = (e) => {
+  const { name, value } = e.target;
+  setCredentials((prev) => ({ ...prev, [name]: value }));
+};
+
+const handleSubmitLogIn = async (e) => {
+  e.preventDefault();
+
+  try {
+    const response = await axios.post('https://localhost:7008/api/UserRegistries/login', credentials);
+
+    if (response.data.message === 'Login successful.') {
+      // Login successful, redirect to some other page (e.g., dashboard)
+      alert("Login Successful.");
+      setIsLoggedIn(true);
+      setError('');
+      // Replace '/dashboard' with the actual URL of your dashboard page
+      navigate('/dashboardapplicant');
+    } 
+    else {
+      // Login failed, show an error message
+      setError('Invalid credentials.');
+      setIsLoggedIn(false);
+    }
+  } catch (error) {
+    setError('Invalid Credentials');
+    setIsLoggedIn(false);
+  }
+};
+
+
+
+//User SignUp
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -12,14 +51,16 @@ const SignInSignUpPage = () => {
     cnic: "",
   });
 
+
+
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleChangeSignUp = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmitSignUp = async (e) => {
     e.preventDefault();
 
     try {
@@ -52,7 +93,7 @@ const SignInSignUpPage = () => {
       </ul>
  
       <div className="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
-        <form>
+        <form onSubmit={handleSubmitLogIn}>
           <div className="text-center mb-3">
             <p>Sign in with:</p>
             <button type="button" className="btn btn-primary btn-floating mx-1">
@@ -69,17 +110,45 @@ const SignInSignUpPage = () => {
           </div>
 
           <p className="text-center">or:</p>
+          {error && <p style={{textAlign: 'center'}}>{error}</p>}
 
         
-          <div className="form-outline mb-4">
+          {/* <div className="form-outline mb-4">
             <input type="email" id="loginName" className="form-control" />
-            <label className="form-label" for="loginName">Email</label>
-          </div>
+            <label className="form-label" for="loginName">CNIC</label>
+          </div> */}
 
-          <div className="form-outline mb-4">
+        <div>
+          <label htmlFor="cnic">CNIC:</label>
+          <input
+          style={{marginLeft: '15px', width: '70%', marginBottom: '20px'}}
+            type="text"
+            id="cnic"
+            name="cnic"
+            placeholder='Enter CNIC without Dashes'
+            value={credentials.cnic}
+            onChange={handleChangelogin}
+            required
+          />
+        </div>
+
+          {/* <div className="form-outline mb-4">
             <input type="password" id="loginPassword" className="form-control" />
             <label className="form-label" for="loginPassword">Password</label>
-          </div>
+          </div> */}
+          <div>
+          <label htmlFor="password">Password:</label>
+          <input
+          style={{marginLeft: '15px', width: '63%', marginBottom: '20px'}}
+            type="password"
+            id="password"
+            name="password"
+            placeholder='Enter Password'
+            value={credentials.password}
+            onChange={handleChangelogin}
+            required
+          />
+        </div>
 
           
           <div className="row mb-4">
@@ -98,7 +167,7 @@ const SignInSignUpPage = () => {
           </div>
 <a href='/dash1'>
        
-          <button type="button" className="btn btn-primary btn-block mb-4">Sign in</button>
+          <button type="submit" className="btn btn-primary btn-block mb-4">Sign in</button>
 
           </a>
           <div className="text-center">
@@ -107,7 +176,7 @@ const SignInSignUpPage = () => {
         </form>
       </div>
       <div className="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="tab-register">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmitSignUp}>
           <div className="text-center mb-3">
             <p>Sign up with:</p>
             <button type="button" className="btn btn-primary btn-floating mx-1">
@@ -134,7 +203,7 @@ const SignInSignUpPage = () => {
             id="name"
             name='name'
             value={formData.name}
-            onChange={handleChange} 
+            onChange={handleChangeSignUp} 
             placeholder="Name as per CNIC"
             />
           </div>
@@ -152,7 +221,7 @@ const SignInSignUpPage = () => {
             id="cnic"
             name='cnic'
             value={formData.cnic}
-            onChange={handleChange} 
+            onChange={handleChangeSignUp} 
             placeholder="CNIC"
             />
           </div>
@@ -172,7 +241,7 @@ const SignInSignUpPage = () => {
             id="email"
             name='email'
             value={formData.email}
-            onChange={handleChange} 
+            onChange={handleChangeSignUp} 
             placeholder="Enter Email here"
             />
           </div>
@@ -191,7 +260,7 @@ const SignInSignUpPage = () => {
             id="password"
             name='password'
             value={formData.password}
-            onChange={handleChange} 
+            onChange={handleChangeSignUp} 
             placeholder="Password"
             />
           </div>
