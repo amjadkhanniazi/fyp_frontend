@@ -5,6 +5,8 @@ import {useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const SignInSignUpPage = () => {
+  
+
 
 //User Login
 const [credentials, setCredentials] = useState({ cnic: '', password: '' });
@@ -52,6 +54,32 @@ const handleSubmitLogIn = async (e) => {
   });
 
 
+  //check if email already exists
+const [emailExists, setEmailExists] = useState(false);
+const [cnicExists, setCnicExists] = useState(false);
+
+// Function to check if email exists
+const checkEmailExists = async (email) => {
+  try {
+    const response = await axios.get(`https://localhost:7008/api/UserRegistries/check-email?email=${email}`);
+    setEmailExists(response.data.exists);
+  } catch (error) {
+    console.error('Error checking email existence:', error);
+  }
+};
+
+// Function to check if CNIC exists
+const checkCnicExists = async (cnic) => {
+  try {
+    const response = await axios.get(`https://localhost:7008/api/UserRegistries/check-cnic?cnic=${cnic}`);
+    setCnicExists(response.data.exists);
+  } catch (error) {
+    console.error('Error checking CNIC existence:', error);
+  }
+};
+
+
+  const [errors, setErrors] = useState({});
 
   const navigate = useNavigate();
 
@@ -62,18 +90,60 @@ const handleSubmitLogIn = async (e) => {
 
   const handleSubmitSignUp = async (e) => {
     e.preventDefault();
+    const validationErrors = {};
 
-    try {
-      // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint to submit the data
-     await axios.post("https://localhost:7008/api/UserRegistries", formData);
-     alert("Success");
-
-      navigate('/');
-      // You can also show a success message or redirect the user after successful signup
-    } catch (error) {
-      console.error("Signup failed:", error);
-      // Handle the error, show an error message, or take any other necessary action
+    // Check if email and CNIC already exist
+  if (formData.email) {
+    await checkEmailExists(formData.email);
+    if (emailExists) {
+      validationErrors.email = 'Email already exists.';
     }
+  }
+
+  if (formData.cnic) {
+    await checkCnicExists(formData.cnic);
+    if (cnicExists) {
+      validationErrors.cnic = 'CNIC already exists.';
+    }
+  }
+    
+
+    // Name validation
+    if (!/^[A-Za-z\s]{3,255}$/.test(formData.name)) {
+      validationErrors.name = 'Name must contain only alphabets and spaces, and be between 3 and 255 characters long.';
+    }
+
+    // CNIC validation
+    if (!/^\d{13}$/.test(formData.cnic)) {
+      validationErrors.cnic = 'Should be 13 digits long and contain only numbers.';
+    }
+
+    // Email validation
+    if (!/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/.test(formData.email)) {
+      validationErrors.email = 'Invalid email address.';
+    }
+
+    // Password validation
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(formData.password)) {
+      validationErrors.password = 'Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one special character.';
+    }
+
+    if (Object.keys(validationErrors).length === 0) {
+      setErrors({});
+      try {
+        // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint to submit the data
+       await axios.post("https://localhost:7008/api/UserRegistries", formData);
+       alert("Success");
+        navigate('/');
+      }
+      catch (error) {
+        console.error("Signup failed:", error); 
+      }
+
+    } 
+    else {
+      setErrors(validationErrors);
+    } 
   };
 
   return (
@@ -206,13 +276,10 @@ const handleSubmitLogIn = async (e) => {
             onChange={handleChangeSignUp} 
             placeholder="Name as per CNIC"
             />
+            <div><p style={{color:'red'}}>{errors.name}</p></div>
           </div>
 
-          {/* <div className="form-outline mb-4">
-            <input type="text" id="registerName" className="form-control" />
-            <label className="form-label" for="registerName">Name</label>
-          </div> */}
-
+          
           <div>
             <label className="form-label" htmlFor="cnic">CNIC </label>
             <input
@@ -224,13 +291,8 @@ const handleSubmitLogIn = async (e) => {
             onChange={handleChangeSignUp} 
             placeholder="CNIC"
             />
+            <div><p style={{color:'red'}}>{errors.cnic}</p></div>
           </div>
-
-
-          {/* <div className="form-outline mb-4">
-            <input type="text" id="registercnic" className="form-control" />
-            <label className="form-label" for="registercnic">CNIC</label>
-          </div> */}
 
 
           <div>
@@ -244,13 +306,9 @@ const handleSubmitLogIn = async (e) => {
             onChange={handleChangeSignUp} 
             placeholder="Enter Email here"
             />
+            <div><p style={{color:'red'}}>{errors.email}</p></div>
           </div>
 
-
-          {/* <div className="form-outline mb-4">
-            <input type="email" id="registerEmail" className="form-control" />
-            <label className="form-label" for="registerEmail">Email</label>
-          </div> */}
 
           <div>
             <label className="form-label" htmlFor="password">Password </label>
@@ -263,12 +321,8 @@ const handleSubmitLogIn = async (e) => {
             onChange={handleChangeSignUp} 
             placeholder="Password"
             />
+            <div><p style={{color:'red'}}>{errors.password}</p></div>
           </div>
-
-          {/* <div className="form-outline mb-4">
-            <input type="password" id="registerPassword" className="form-control" />
-            <label className="form-label" for="registerPassword">Password</label>
-          </div> */}
 
         
           {/* <div className="form-check d-flex justify-content-center mb-4">
