@@ -3,43 +3,45 @@ import Navbar from './Navbar'
 import axios from 'axios'
 import {useState} from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useCookies } from 'react-cookie'
+import api from '../Api';
+import { loginUser } from '../AuthService'
 
 const SignInSignUpPage = () => {
   
 
 
 //User Login
+
 const [credentials, setCredentials] = useState({ cnic: '', password: '' });
 const [error, setError] = useState('');
-const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 const handleChangelogin = (e) => {
   const { name, value } = e.target;
   setCredentials((prev) => ({ ...prev, [name]: value }));
 };
 
+
+
 const handleSubmitLogIn = async (e) => {
   e.preventDefault();
 
   try {
-    const response = await axios.post('https://localhost:7008/api/UserRegistries/login', credentials);
-
-    if (response.data.message === 'Login successful.') {
-      // Login successful, redirect to some other page (e.g., dashboard)
+    
+    const userdata = await axios.post('https://localhost:7008/api/UserRegistries/login',credentials);
+    
+    
+    if (userdata.data.message === 'Login successful.') {
       alert("Login Successful.");
-      setIsLoggedIn(true);
       setError('');
-      // Replace '/dashboard' with the actual URL of your dashboard page
       navigate('/dashboardapplicant');
-    } 
-    else {
-      // Login failed, show an error message
-      setError('Invalid credentials.');
-      setIsLoggedIn(false);
     }
-  } catch (error) {
-    setError('Invalid Credentials');
-    setIsLoggedIn(false);
+    else {
+      setError('Invalid credentials.');
+    }
+  } 
+  catch (error) {
+    setError('Unexpected Error, Please try again');
   }
 };
 
