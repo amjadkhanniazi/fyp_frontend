@@ -2,8 +2,10 @@ import React from 'react'
 import Footer from './Footer';
 import Navbar from './Navbar';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 
 export default function Confirmation() {
+  const { isAuthenticated } = useAuth();
   return (
     <>
     <Navbar/>
@@ -53,10 +55,13 @@ export default function Confirmation() {
     <div>
 <p className="text-center my-2">Navigate to:</p>
 </div>
-    <div className="text-center mt-2 mb-3">
+   {isAuthenticated? (<div className="text-center mt-2 mb-3">
 <Link to="/dashboardapplicant" className="btn btn-primary" >Dashboard</Link>
 
-  </div>
+  </div>):(<div className="text-center mt-2 mb-3">
+<Link to="/" className="btn btn-primary" >Home</Link>
+
+  </div>)}
   </div>
   </section>
     <Footer />

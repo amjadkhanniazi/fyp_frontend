@@ -1,8 +1,12 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom";
+import { useAuth } from '../AuthContext';
+
 
 
 function Navbar() {
+  const { isAuthenticated } = useAuth();
+
 
   const navigate = useNavigate();
 
@@ -59,13 +63,13 @@ function Navbar() {
 
             <li className="nav-item">
 
-              <div className="nav-link Pointer" onClick={() => navigate("/apprules")} >Apply Now</div>
+             {isAuthenticated? (<div className="nav-link Pointer" onClick={() => navigate("/apprules")} >Apply Now</div>):(<div className="nav-link Pointer" onClick={() => navigate("/signin")} >Apply Now</div>)}
 
             </li>
 
             <li className="nav-item">
 
-              <div className="nav-link mx-2 Pointer" onClick={() => navigate("/signin")} >Login</div>
+             {isAuthenticated? (<div className="nav-link mx-2 Pointer" onClick={() => navigate("/dashboardapplicant")} >My Account</div>):(<div className="nav-link mx-2 Pointer" onClick={() => navigate("/signin")} >Login</div>)}
 
             </li>
 

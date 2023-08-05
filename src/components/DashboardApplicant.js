@@ -1,13 +1,49 @@
-import React from 'react'
+import {React, useEffect, useState} from 'react'
 
 import Navbar from './Navbar'
 
 import Footer from './Footer'
+import {useHistory} from 'react-router-dom'
 
-import { Link } from 'react-router-dom'
+import { useAuth } from '../AuthContext';
+import { Link, useNavigate } from 'react-router-dom'
 
 
 function DashboardApplicant() {
+//fetching user data
+const [userData, setUserData] = useState('');
+const {isAuthenticated,logout}=useAuth();
+
+useEffect(() => {
+  // Fetch user data from the API using the stored JWT
+  const token = localStorage.getItem('jwt');
+  const cnic = localStorage.getItem('usercnic');
+  
+  if (token && cnic) {
+    fetch(`https://localhost:7008/api/UserRegistries/${cnic}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      setUserData(data);
+    })
+    .catch(error => {
+      console.error('Error fetching user data:', error);
+    });
+  }
+}, []);
+
+
+  //on Log Out Function
+  const handleLogout = async () => {
+      localStorage.removeItem('jwt');
+      localStorage.removeItem('usercnic');
+      logout();
+      window.location.href = '/';
+  };
 
   return (
 
@@ -143,11 +179,11 @@ function DashboardApplicant() {
 
             <div className="text-center mb-3" style={{marginTop: "50%"}}>
 
-              <Link to="home" className="btn btn-primary" style={{width: "120px"}}>
+            {isAuthenticated ? ( <Link to="home" onClick={handleLogout} className="btn btn-primary" style={{width: "120px"}}>
 
                   Logout
 
-              </Link>
+              </Link>):( <p>You are already logged out.</p>)}
 
           </div>
 
@@ -186,58 +222,51 @@ function DashboardApplicant() {
 
                
                 
-                  <div className="mb-4 " style={{width: "48.5%"}}>
-
-                    <div className="form-outline">
-
-                      <input style={{border:"1px solid black"}} type="text" id="form6Example1" className="form-control" />
-
-                      <label className="form-label" htmlFor="form6Example1">UserName</label>
-
-                    </div>
-
-                  </div>
+              <div style={{marginBottom:'15px',width: "48.5%"}}>
+                <label className="form-label" htmlFor="name">
+                  Name{" "}
+                </label>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={userData.name}
+                />
+              </div>
+                  
 
                 
               
                 
-                <div className="row mb-4">
+              <div style={{marginBottom:'15px',width: "48.5%"}}>
+                <label className="form-label" htmlFor="email">
+                  Email{" "}
+                </label>
+                <input
+                  className="form-control"
+                  type="email"
+                  id="email"
 
-                  <div className="col">
-
-                <div className="form-outline">
-
-                  <input style={{border:"1px solid black"}} type="text" id="form6Example3" className="form-control" />
-
-                  <label className="form-label" htmlFor="form6Example3">First Name</label>
-
-                </div>
-
-              </div>
-
-              <div className="col">
-
-                <div className="form-outline">
-
-                  <input style={{border:"1px solid black"}} type="text" id="form6Example3" className="form-control" />
-
-                  <label className="form-label" htmlFor="form6Example3">Last Name</label>
-
-                </div>
-
-              </div>
-
+                  value={userData.email}
+                />
               </div>
 
               
                
-                <div className="form-outline mb-4" style={{width: "48.5%"}}>
 
-                  <input style={{border:"1px solid black"}} type="text" id="form6Example4" className="form-control" />
+              <div style={{marginBottom:'15px',width: "48.5%"}}>
+                <label className="form-label" htmlFor="cnic">
+                  CNIC{" "}
+                </label>
+                <input
+                  className="form-control"
+                  type="numeric"
+                  id="cnic"
 
-                  <label className="form-label" htmlFor="form6Example4">CNIC</label>
-
-                </div>
+                  value={userData.cnic}
+                />
+              </div>
 
              
                 <div className="row mb-4">
@@ -246,7 +275,7 @@ function DashboardApplicant() {
 
                 <div className="form-outline">
 
-                  <input style={{border:"1px solid black"}} type="email" id="form6Example5" className="form-control" />
+                  <input style={{border:"1px solid black"}}  type="email" id="form6Example5" className="form-control" />
 
                   <label className="form-label" htmlFor="form6Example5">Primary PhoneNo</label>
 

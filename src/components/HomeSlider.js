@@ -1,9 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 
 
 export default function HomeSlider() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   return (
 
 
@@ -37,11 +39,15 @@ export default function HomeSlider() {
                   onClick={() => navigate('/paymethodoption')} rel="nofollow" >
                   Donate Now
                 </div>
-                <div role="button" className="btn btn-primary btn-lg m-2"
+               {isAuthenticated? (<div role="button" className="btn btn-primary btn-lg m-2"
                   onClick={() => navigate("/application")}
                 >
                   Become a Volunteer
-                </div>
+                </div>):(<div role="button" className="btn btn-primary btn-lg m-2"
+                  onClick={() => navigate("/signin")}
+                >
+                  Become a Volunteer
+                </div>)}
               </div>
             </div>
           </div>

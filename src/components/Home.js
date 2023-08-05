@@ -4,10 +4,12 @@ import Footer from './Footer';
 import { Link, useNavigate, } from 'react-router-dom';
 import { Grid } from '@mui/material';
 import axios from 'axios';
+import { useAuth } from '../AuthContext';
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function Home() {
 
-
+  const { isAuthenticated } = useAuth();
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [message, setMessage] = useState('');
 
@@ -77,11 +79,15 @@ export default function Home() {
                     onClick={() => navigate('/paymethodoption')} rel="nofollow" >
                     Donate Now
                   </div>
-                  <div role="button" className="btn btn-primary btn-lg m-2"
-                    onClick={() => navigate("/application")}
-                  >
-                    Become a Volunteer
-                  </div>
+                  {isAuthenticated? (<div role="button" className="btn btn-primary btn-lg m-2"
+                  onClick={() => navigate("/application")}
+                >
+                  Become a Volunteer
+                </div>):(<div role="button" className="btn btn-primary btn-lg m-2"
+                  onClick={() => navigate("/signin")}
+                >
+                  Become a Volunteer
+                </div>)}
                 </div>
               </div>
             </div>

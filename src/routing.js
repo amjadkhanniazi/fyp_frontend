@@ -1,10 +1,7 @@
 import React from 'react';
+import { BrowserRouter, Switch, Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './AuthContext';
 import ReactDOM from 'react-dom/client';
-import {
-    BrowserRouter,
-    Routes,
-    Route,
-} from "react-router-dom";
 import App from "./App";
 import Home from "./components/Home";
 import Documentvol from './components/Documentvol';
@@ -63,6 +60,7 @@ import Navbar from './components/Navbar';
 
 export default function AppRouter() {
     return (
+        <AuthProvider>
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Home />} />
@@ -115,5 +113,6 @@ export default function AppRouter() {
                 <Route path="/coninfo" element={<Contactinformation />} />
             </Routes>
         </BrowserRouter>
+        </AuthProvider>
     )
 }
