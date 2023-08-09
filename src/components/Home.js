@@ -28,11 +28,11 @@ export default function Home() {
       
   
       try {
-        const response = await axios.post('https://localhost:7008/api/NewsLetters/check-email', { email: newsletterEmail });
+        const response = await axios.post('https://fypsws.azurewebsites.net/api/NewsLetters/check-email', { email: newsletterEmail });
         if(response.data.exists){
           setMessage('Email Already Exists.');
         } else{
-        await axios.post('https://localhost:7008/api/NewsLetters', {
+        await axios.post('https://fypsws.azurewebsites.net/api/NewsLetters', {
           email: newsletterEmail,
         });
 

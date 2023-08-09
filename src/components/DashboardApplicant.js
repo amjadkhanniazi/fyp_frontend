@@ -20,7 +20,7 @@ useEffect(() => {
   const cnic = localStorage.getItem('usercnic');
   
   if (token && cnic) {
-    fetch(`https://localhost:7008/api/UserRegistries/${cnic}`, {
+    fetch(`https://fypsws.azurewebsites.net/api/UserRegistries/${cnic}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`
@@ -79,7 +79,7 @@ useEffect(() => {
           <div className="text-center" style={{marginBottom: "25%"}}>
 
               
-              <h6>Amjad Khan</h6>   
+              <h6>{userData.name}</h6>
 
               
               </div>

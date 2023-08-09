@@ -30,9 +30,12 @@ const SignInSignUpPage = () => {
 
     try {
       const response = await axios.post(
-        "https://localhost:7008/api/UserRegistries/login",
+        "https://fypsws.azurewebsites.net/api/UserRegistries/login",
         credentials
       );
+      if(response.status===401){
+        setError("Invalid credentials.");
+      }
       if (response.status === 200) {
         // Store the JWT token
         localStorage.setItem("jwt", response.data.token);
@@ -41,11 +44,13 @@ const SignInSignUpPage = () => {
         login();
         setError("");
         navigate("/");
-      } else {
+      }
+       
+      else {
         setError("Invalid credentials.");
       }
     } catch (error) {
-      setError(error.message); // Set the actual error message
+      setError("Login failed"); // Set the actual error message
     }
   };
 
@@ -65,7 +70,7 @@ const SignInSignUpPage = () => {
   const checkEmailExists = async (email) => {
     try {
       const response = await axios.get(
-        `https://localhost:7008/api/UserRegistries/check-email?email=${email}`
+        `https://fypsws.azurewebsites.net/api/UserRegistries/check-email?email=${email}`
       );
       setEmailExists(response.data.exists);
     } catch (error) {
@@ -77,7 +82,7 @@ const SignInSignUpPage = () => {
   const checkCnicExists = async (cnic) => {
     try {
       const response = await axios.get(
-        `https://localhost:7008/api/UserRegistries/check-cnic?cnic=${cnic}`
+        `https://fypsws.azurewebsites.net/api/UserRegistries/check-cnic?cnic=${cnic}`
       );
       setCnicExists(response.data.exists);
     } catch (error) {
@@ -144,8 +149,9 @@ const SignInSignUpPage = () => {
       setErrors({});
       try {
         // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint to submit the data
-        await axios.post("https://localhost:7008/api/UserRegistries", formData);
-        alert("Success");
+        const response = await axios.post("https://fypsws.azurewebsites.net/api/UserRegistries", formData);
+        
+        alert("Success, Now go and Login");
         navigate("/signin");
       } catch (error) {
         console.error("Signup failed:", error);
