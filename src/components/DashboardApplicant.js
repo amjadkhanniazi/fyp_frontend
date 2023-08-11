@@ -1,17 +1,17 @@
 import {React, useEffect, useState} from 'react'
 
 import Navbar from './Navbar'
-
 import Footer from './Footer'
-import {useHistory} from 'react-router-dom'
-
+import axios from 'axios';
 import { useAuth } from '../AuthContext';
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { BASE_API_URL } from '../ApiConfig';
 
 
 function DashboardApplicant() {
 //fetching user data
 const [userData, setUserData] = useState('');
+const [updatedUserData, setUpdatedUserData] = useState({});
 const {isAuthenticated,logout}=useAuth();
 
 useEffect(() => {
@@ -20,7 +20,7 @@ useEffect(() => {
   const cnic = localStorage.getItem('usercnic');
   
   if (token && cnic) {
-    fetch(`https://fypsws.azurewebsites.net/api/UserRegistries/${cnic}`, {
+    fetch(`${BASE_API_URL}/api/UserRegistries/${cnic}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`
@@ -29,12 +29,48 @@ useEffect(() => {
     .then(response => response.json())
     .then(data => {
       setUserData(data);
+
     })
     .catch(error => {
       console.error('Error fetching user data:', error);
     });
   }
 }, []);
+
+//update user data
+
+const handleInputChange = (event) => {
+  const { name, value } = event.target;
+
+  setUpdatedUserData((prevData) => ({
+    ...prevData,
+    [name]: value,
+  }));
+};
+
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  const token = localStorage.getItem('jwt');
+    const cnic = localStorage.getItem('usercnic');
+    try {
+      console.log(updatedUserData.name);
+      console.log(updatedUserData.cnic);
+      console.log(updatedUserData.email);
+      const response = await axios.put(
+        
+        `${BASE_API_URL}/api/UserRegistries/${cnic}`,
+        updatedUserData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setUserData(response.data);
+    } catch (error) {
+      console.error('Error updating user data:', error);
+    }
+  };
 
 
   //on Log Out Function
@@ -218,11 +254,11 @@ useEffect(() => {
               </div>
 
                 
-              <form className="my-4" style={{margin:'3% 0 0 2%'}}>
+              <form className="my-4" style={{margin:'3% 0 0 2%'}} onSubmit={handleSubmit}>
 
                
                 
-              <div style={{marginBottom:'15px',width: "48.5%"}}>
+              <div style={{marginBottom:'15px',width: "48.5%"}} >
                 <label className="form-label" htmlFor="name">
                   Name{" "}
                 </label>
@@ -231,7 +267,8 @@ useEffect(() => {
                   type="text"
                   id="name"
                   name="name"
-                  value={userData.name}
+                  value={updatedUserData.name || userData.name || ''}
+                    onChange={handleInputChange}
                 />
               </div>
                   
@@ -248,7 +285,8 @@ useEffect(() => {
                   type="email"
                   id="email"
 
-                  value={userData.email}
+                  value={updatedUserData.email || userData.email || ''}
+                    onChange={handleInputChange}
                 />
               </div>
 
@@ -264,7 +302,8 @@ useEffect(() => {
                   type="numeric"
                   id="cnic"
 
-                  value={userData.cnic}
+                  value={updatedUserData.cnic || userData.cnic || ''}
+                    onChange={handleInputChange}
                 />
               </div>
 

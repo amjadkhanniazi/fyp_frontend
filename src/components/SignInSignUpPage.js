@@ -4,7 +4,8 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../AuthContext';
-import { Button, notification, Space } from 'antd';
+import { BASE_API_URL } from '../ApiConfig';
+
 
 
 
@@ -30,7 +31,7 @@ const SignInSignUpPage = () => {
 
     try {
       const response = await axios.post(
-        "https://fypsws.azurewebsites.net/api/UserRegistries/login",
+        `${BASE_API_URL}/api/UserRegistries/login`,
         credentials
       );
       if(response.status===401){
@@ -70,7 +71,7 @@ const SignInSignUpPage = () => {
   const checkEmailExists = async (email) => {
     try {
       const response = await axios.get(
-        `https://fypsws.azurewebsites.net/api/UserRegistries/check-email?email=${email}`
+        `${BASE_API_URL}/api/UserRegistries/check-email?email=${email}`
       );
       setEmailExists(response.data.exists);
     } catch (error) {
@@ -82,7 +83,7 @@ const SignInSignUpPage = () => {
   const checkCnicExists = async (cnic) => {
     try {
       const response = await axios.get(
-        `https://fypsws.azurewebsites.net/api/UserRegistries/check-cnic?cnic=${cnic}`
+        `${BASE_API_URL}/api/UserRegistries/check-cnic?cnic=${cnic}`
       );
       setCnicExists(response.data.exists);
     } catch (error) {
@@ -149,7 +150,7 @@ const SignInSignUpPage = () => {
       setErrors({});
       try {
         // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint to submit the data
-        const response = await axios.post("https://fypsws.azurewebsites.net/api/UserRegistries", formData);
+        const response = await axios.post(`${BASE_API_URL}/api/UserRegistries`, formData);
         
         alert("Success, Now go and Login");
         navigate("/signin");
