@@ -51,7 +51,7 @@ const SignInSignUpPage = () => {
         setError("Invalid credentials.");
       }
     } catch (error) {
-      setError("Login failed"); // Set the actual error message
+      setError("Login failed"); 
     }
   };
 
@@ -149,7 +149,7 @@ const SignInSignUpPage = () => {
     if (Object.keys(validationErrors).length === 0) {
       setErrors({});
       try {
-        // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint to submit the data
+        
         const response = await axios.post(`${BASE_API_URL}/api/UserRegistries`, formData);
         
         alert("Success, Now go and Login");

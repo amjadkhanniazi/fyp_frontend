@@ -45,7 +45,7 @@ function Navbar() {
 
               <div className="nav-link mx-2 Pointer" onClick={() => navigate("/volunteer")}
 
-              >Voolunteer</div>
+              >Volunteer</div>
 
             </li>
 

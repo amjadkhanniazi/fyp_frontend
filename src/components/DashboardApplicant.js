@@ -60,31 +60,6 @@ function DashboardApplicant() {
       });
   }
 
-  // useEffect(() => {
-  //   // Fetch user data from the API using the stored JWT
-  //   const token = localStorage.getItem('jwt');
-  //   const cnic = localStorage.getItem('usercnic');
-
-  //   if (token && cnic) {
-  //     fetch(`${BASE_API_URL}/api/UserRegistries/${cnic}`, {
-  //       method: 'GET',
-  //       headers: {
-  //         Authorization: `Bearer ${token}`
-  //       }
-  //     })
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       setUserData(data);
-
-  //     })
-  //     .catch(error => {
-  //       console.error('Error fetching user data:', error);
-  //     });
-  //   }
-  // }, []);
-
-  //update user data
-
   //on Log Out Function
   const handleLogout = async () => {
     localStorage.removeItem("jwt");
